@@ -20,10 +20,7 @@ def force_make_symlink(path_to_file, path_to_symlink):
 
 def make_all_symlinks():
     excluded_items = [
-        ".DS_Store",
-        ".git",
-        ".gitignore",
-        "make_symlinks.py"
+        ".DS_Store"
     ]
 
     home_directory_path = Path.home()
