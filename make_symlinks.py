@@ -27,7 +27,7 @@ def make_all_symlinks():
     ]
 
     home_directory_path = Path.home()
-    dotfile_directory_path = Path(home_directory_path, ".dotfiles")
+    dotfile_directory_path = Path(home_directory_path, ".dotfiles/files")
 
     files = [file for file in listdir(dotfile_directory_path) if isfile(join(dotfile_directory_path, file)) and str(file) not in excluded_items]
 
