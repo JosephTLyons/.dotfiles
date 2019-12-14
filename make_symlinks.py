@@ -6,11 +6,11 @@ from os import listdir, remove, symlink
 from os.path import isfile, join
 from pathlib import Path
 
-def make_symlink(action, path_to_symlink, path_to_file):
+def make_symlink(action, path_to_file, path_to_symlink):
     symlink(path_to_file, path_to_symlink)
     print("Symlink", action + ":", path_to_symlink, "->", path_to_file)
 
-def force_symlink(path_to_file, path_to_symlink):
+def force_make_symlink(path_to_file, path_to_symlink):
     try:
         make_symlink("created", path_to_symlink, path_to_file)
     except OSError as e:
@@ -35,10 +35,10 @@ def make_all_symlinks():
         absolute_path_to_dotfile = Path(dotfile_directory_path, file)
         absolute_path_to_symlink = Path(home_path, file)
 
-        force_symlink(absolute_path_to_dotfile, absolute_path_to_symlink)
+        force_make_symlink(absolute_path_to_dotfile, absolute_path_to_symlink)
 
     # Additional symlinks generated here
-    force_symlink(Path(dotfile_directory_path, ".zprofile"), Path(home_path, ".profile"))
+    force_make_symlink(Path(dotfile_directory_path, ".zprofile"), Path(home_path, ".profile"))
 
 if __name__ == "__main__":
     make_all_symlinks()
