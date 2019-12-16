@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 
 import errno
-
+import glob
 from os import listdir, remove, symlink
 from os.path import isfile, join
 from pathlib import Path
+
 
 def make_symlink(action, path_to_file, path_to_symlink):
     symlink(path_to_file, path_to_symlink)
@@ -22,6 +23,8 @@ def make_all_symlinks():
     excluded_items = [
         ".DS_Store"
     ]
+
+    excluded_items += glob.glob(".*~")
 
     home_directory_path = Path.home()
     dotfile_directory_path = Path(home_directory_path, ".dotfiles/files")
