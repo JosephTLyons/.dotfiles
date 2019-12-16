@@ -19,7 +19,7 @@ def force_make_symlink(path_to_file, path_to_symlink):
             remove(path_to_symlink)
             make_symlink("overwritten", path_to_file, path_to_symlink)
 
-def make_all_symlinks():
+def make_symlinks():
     excluded_items = [
         ".DS_Store"
     ]
@@ -41,4 +41,4 @@ def make_all_symlinks():
     force_make_symlink(Path(dotfile_directory_path, ".zprofile"), Path(home_directory_path, ".profile"))
 
 if __name__ == "__main__":
-    make_all_symlinks()
+    make_symlinks()
