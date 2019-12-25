@@ -6,19 +6,19 @@ import os
 import pathlib
 
 
-def make_symlink(action, path_to_file, path_to_symlink):
+def create_symlink(action, path_to_file, path_to_symlink):
     os.symlink(path_to_file, path_to_symlink)
     print("Symlink", action + ":", path_to_symlink, "->", path_to_file)
 
-def force_make_symlink(path_to_file, path_to_symlink):
+def force_create_symlink(path_to_file, path_to_symlink):
     try:
-        make_symlink("created", path_to_file, path_to_symlink)
+        create_symlink("created", path_to_file, path_to_symlink)
     except OSError as error:
         if error.errno == errno.EEXIST:
             os.remove(path_to_symlink)
-            make_symlink("overwritten", path_to_file, path_to_symlink)
+            create_symlink("overwritten", path_to_file, path_to_symlink)
 
-def make_symlinks():
+def create_symlinks():
     excluded_items = [
         ".DS_Store"
     ]
@@ -33,13 +33,18 @@ def make_symlinks():
             absolute_path_to_dotfile = pathlib.Path(dotfile_directory_path, file)
             absolute_path_to_symlink = pathlib.Path(home_directory_path, file)
 
-            force_make_symlink(absolute_path_to_dotfile, absolute_path_to_symlink)
+            force_create_symlink(absolute_path_to_dotfile, absolute_path_to_symlink)
 
     # Additional symlinks generated here
-    force_make_symlink(
+    force_create_symlink(
         pathlib.Path(dotfile_directory_path, ".zprofile"),
         pathlib.Path(home_directory_path, ".profile")
     )
 
 if __name__ == "__main__":
-    make_symlinks()
+    create_symlinks()
+
+
+
+
+# Have main run a while loop asking if user wants to create or delete symlinks
