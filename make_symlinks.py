@@ -14,8 +14,8 @@ def make_symlink(action, path_to_file, path_to_symlink):
 def force_make_symlink(path_to_file, path_to_symlink):
     try:
         make_symlink("created", path_to_file, path_to_symlink)
-    except OSError as e:
-        if e.errno == errno.EEXIST:
+    except OSError as error:
+        if error.errno == errno.EEXIST:
             remove(path_to_symlink)
             make_symlink("overwritten", path_to_file, path_to_symlink)
 
