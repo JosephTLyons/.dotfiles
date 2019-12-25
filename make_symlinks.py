@@ -2,7 +2,7 @@
 
 import errno
 import glob
-from os import listdir, remove, symlink
+from os import getcwd, listdir, remove, symlink
 from os.path import isfile, join
 from pathlib import Path
 
@@ -27,7 +27,7 @@ def make_symlinks():
     excluded_items += glob.glob(".*~")
 
     home_directory_path = Path.home()
-    dotfile_directory_path = Path(home_directory_path, ".dotfiles/files")
+    dotfile_directory_path = Path(getcwd() + "/files")
 
     files = [file for file in listdir(dotfile_directory_path) if isfile(join(dotfile_directory_path, file)) and file not in excluded_items]
 
