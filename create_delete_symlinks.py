@@ -11,11 +11,12 @@ def create_symlink(action, path_to_file, path_to_symlink):
     print("Symlink", action + ":", path_to_symlink, "->", path_to_file)
 
 def force_create_symlink(path_to_file, path_to_symlink):
-    if not os.path.isfile(path_to_symlink):
-        create_symlink("Created", path_to_file, path_to_symlink)
-    else:
-        os.remove(path_to_symlink)
-        create_symlink("Overwritten", path_to_file, path_to_symlink)
+    try:
+         create_symlink("Created", path_to_file, path_to_symlink)
+    except OSError as error:
+        if error.errno == errno.EEXIST:
+            os.remove(path_to_symlink)
+            create_symlink("Overwritten", path_to_file, path_to_symlink)
 
 def create_symlink_to_dotfile_dictionary():
     excluded_items = [
@@ -40,23 +41,27 @@ def create_symlink_to_dotfile_dictionary():
 
     return symlink_to_dotfile_dictionary
 
+def delete_symlinks():
+    for absolute_path_to_symlink in create_symlink_to_dotfile_dictionary().keys():
+        try:
+            os.remove(absolute_path_to_symlink)
+            print("Symlink Deleted:", absolute_path_to_symlink)
+        except OSError as error:
+            if error.errno == errno.ENOENT:
+                print("Symlink Does Not Exist:", absolute_path_to_symlink)
+
 def create_symlinks():
     for (absolute_path_to_symlink, absolute_path_to_dotfile) in create_symlink_to_dotfile_dictionary().items():
         force_create_symlink(absolute_path_to_dotfile, absolute_path_to_symlink)
-
-def delete_symlinks():
-    for absolute_path_to_symlink in create_symlink_to_dotfile_dictionary().keys():
-        if os.path.isfile(absolute_path_to_symlink):
-            os.remove(absolute_path_to_symlink)
-            print("Symlink Deleted:", absolute_path_to_symlink)
-        else:
-            print("Symlink Does Not Exist:", absolute_path_to_symlink)
 
 if __name__ == "__main__":
     print("1: Create Symlinks")
     print("2: Delete Symlinks")
 
-    user_input = int(input())
+    try:
+        user_input = int(input())
+    except:
+        user_input = 0
 
     if user_input == 1:
         create_symlinks()
@@ -65,6 +70,6 @@ if __name__ == "__main__":
     else:
         print("Invalid Input")
 
-# Rename script to something that captures both creation and deletion
 # Clean up long lines
-# Try except on non-integer input?
+# Be able to run the script from any path and it still work correctly (IE, being in the scripts
+# parent folder)
