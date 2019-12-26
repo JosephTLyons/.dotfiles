@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-import errno
 import glob
 import os
 import pathlib
@@ -12,11 +11,10 @@ def create_symlink(action, path_to_file, path_to_symlink):
 
 def force_create_symlink(path_to_file, path_to_symlink):
     try:
-         create_symlink("Created", path_to_file, path_to_symlink)
-    except OSError as error:
-        if error.errno == errno.EEXIST:
-            os.remove(path_to_symlink)
-            create_symlink("Overwritten", path_to_file, path_to_symlink)
+        create_symlink("Created", path_to_file, path_to_symlink)
+    except FileExistsError:
+        os.remove(path_to_symlink)
+        create_symlink("Overwritten", path_to_file, path_to_symlink)
 
 def create_symlink_to_dotfile_dictionary():
     excluded_items = [
@@ -46,9 +44,8 @@ def delete_symlinks():
         try:
             os.remove(absolute_path_to_symlink)
             print("Symlink Deleted:", absolute_path_to_symlink)
-        except OSError as error:
-            if error.errno == errno.ENOENT:
-                print("Symlink Does Not Exist:", absolute_path_to_symlink)
+        except FileNotFoundError:
+            print("Symlink Does Not Exist:", absolute_path_to_symlink)
 
 def create_symlinks():
     for (absolute_path_to_symlink, absolute_path_to_dotfile) in create_symlink_to_dotfile_dictionary().items():
@@ -60,7 +57,7 @@ if __name__ == "__main__":
 
     try:
         user_input = int(input())
-    except:
+    except ValueError:
         user_input = 0
 
     if user_input == 1:
