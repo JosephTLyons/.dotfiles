@@ -1,6 +1,6 @@
 [user]
 	name = Joseph T Lyons
-	email = JosephTLyons@users.noreply.github.com
+	email = JosephTLyons@gmail.com
 [filter "lfs"]
 	clean = git-lfs clean -- %f
 	smudge = git-lfs smudge -- %f
