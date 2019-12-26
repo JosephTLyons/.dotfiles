@@ -17,10 +17,7 @@ def force_create_symlink(path_to_file, path_to_symlink):
         create_symlink("Overwritten", path_to_file, path_to_symlink)
 
 def create_symlink_to_dotfile_dictionary():
-    excluded_items = [
-        ".DS_Store"
-    ]
-
+    excluded_items = [".DS_Store"]
     excluded_items += glob.glob(".*~")
 
     home_directory_path = pathlib.Path.home()
