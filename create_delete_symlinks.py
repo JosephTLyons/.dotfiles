@@ -23,24 +23,43 @@ def delete_symlink(absolute_path_to_symlink):
     except FileNotFoundError:
         print("Symlink Does Not Exist:", absolute_path_to_symlink)
 
-def create_symlink_to_dotfile_dictionary():
+def add_default_items_to_symlink_to_dotfile_dictionary(
+    symlink_to_dotfile_dictionary,
+    home_directory_path,
+    dotfile_directory_path
+):
     excluded_items = [".DS_Store"]
     excluded_items += glob.glob(".*~")
 
-    home_directory_path = pathlib.Path.home()
-    dotfile_directory_path = pathlib.Path(os.getcwd() + "/files")
-
-    symlink_to_dotfile_dictionary = {}
-
-    # Create a symlink in the home folder for each dotfile in the files folder
     for file in os.listdir(dotfile_directory_path):
         if os.path.isfile(os.path.join(dotfile_directory_path, file)) and file not in excluded_items:
             absolute_path_to_symlink = pathlib.Path(home_directory_path, file)
             absolute_path_to_dotfile = pathlib.Path(dotfile_directory_path, file)
             symlink_to_dotfile_dictionary[absolute_path_to_symlink] = absolute_path_to_dotfile
 
-    # Create additional custom symlinks here
+def add_custom_items_to_symlink_to_dotfile_dictionary(
+    symlink_to_dotfile_dictionary,
+    home_directory_path,
+    dotfile_directory_path
+):
     symlink_to_dotfile_dictionary[pathlib.Path(home_directory_path, ".profile")] = pathlib.Path(dotfile_directory_path, ".zprofile")
+
+def create_symlink_to_dotfile_dictionary():
+    home_directory_path = pathlib.Path.home()
+    dotfile_directory_path = pathlib.Path(os.getcwd() + "/files")
+
+    symlink_to_dotfile_dictionary = {}
+
+    add_default_items_to_symlink_to_dotfile_dictionary(
+        symlink_to_dotfile_dictionary,
+        home_directory_path,
+        dotfile_directory_path
+    )
+    add_custom_items_to_symlink_to_dotfile_dictionary(
+        symlink_to_dotfile_dictionary,
+        home_directory_path,
+        dotfile_directory_path
+    )
 
     return symlink_to_dotfile_dictionary
 
