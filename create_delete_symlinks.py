@@ -32,13 +32,14 @@ def create_symlink_to_dotfile_dictionary():
 
     symlink_to_dotfile_dictionary = {}
 
+    # Create a symlink in the home folder for each dotfile in the files folder
     for file in os.listdir(dotfile_directory_path):
         if os.path.isfile(os.path.join(dotfile_directory_path, file)) and file not in excluded_items:
             absolute_path_to_symlink = pathlib.Path(home_directory_path, file)
             absolute_path_to_dotfile = pathlib.Path(dotfile_directory_path, file)
             symlink_to_dotfile_dictionary[absolute_path_to_symlink] = absolute_path_to_dotfile
 
-    # Additional symlinks added here
+    # Create additional custom symlinks here
     symlink_to_dotfile_dictionary[pathlib.Path(home_directory_path, ".profile")] = pathlib.Path(dotfile_directory_path, ".zprofile")
 
     return symlink_to_dotfile_dictionary
