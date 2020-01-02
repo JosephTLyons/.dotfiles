@@ -86,6 +86,3 @@ if __name__ == "__main__":
         delete_symlinks()
     else:
         print("Invalid Input")
-
-# Clean up long lines
-# Be able to run the script from any path and it still work correctly (IE, being in the script's parent folder)
