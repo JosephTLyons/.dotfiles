@@ -42,6 +42,7 @@ def add_custom_items_to_symlink_to_dotfile_dictionary(
     home_directory_path,
     dotfile_directory_path
 ):
+    symlink_to_dotfile_dictionary[pathlib.Path(home_directory_path, ".bashrc")] = pathlib.Path(dotfile_directory_path, ".zshrc")
     symlink_to_dotfile_dictionary[pathlib.Path(home_directory_path, ".profile")] = pathlib.Path(dotfile_directory_path, ".zprofile")
 
 def create_symlink_to_dotfile_dictionary():
