@@ -74,8 +74,8 @@ def delete_symlinks():
         delete_symlink(absolute_path_to_symlink)
 
 if __name__ == "__main__":
-    print("1: Create Symlinks")
-    print("2: Delete Symlinks")
+    print("1) Create Symlinks")
+    print("2) Delete Symlinks")
 
     try:
         user_input = int(input())
