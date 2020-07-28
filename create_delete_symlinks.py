@@ -64,12 +64,12 @@ def create_symlink_to_dotfile_dictionary():
     return symlink_to_dotfile_dictionary
 
 def create_symlinks():
-    for (i, (absolute_path_to_symlink, absolute_path_to_dotfile)) in enumerate(create_symlink_to_dotfile_dictionary().items()):
+    for i, (absolute_path_to_symlink, absolute_path_to_dotfile) in enumerate(create_symlink_to_dotfile_dictionary().items()):
         print("{}) ".format(i + 1), end="")
         create_symlink(absolute_path_to_dotfile, absolute_path_to_symlink)
 
 def delete_symlinks():
-    for (i, absolute_path_to_symlink) in enumerate(create_symlink_to_dotfile_dictionary().keys()):
+    for i, absolute_path_to_symlink in enumerate(create_symlink_to_dotfile_dictionary().keys()):
         print("{}) ".format(i + 1), end="")
         delete_symlink(absolute_path_to_symlink)
 
