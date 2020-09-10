@@ -50,6 +50,8 @@ def add_custom_items_to_symlink_to_dotfile_dictionary(
         home_directory_path, ".bashrc")] = pathlib.Path(dotfile_directory_path, ".zshrc")
     symlink_to_dotfile_dictionary[pathlib.Path(
         home_directory_path, ".profile")] = pathlib.Path(dotfile_directory_path, ".zprofile")
+    symlink_to_dotfile_dictionary[pathlib.Path(
+        "/usr/local/bin/subl")] = pathlib.Path(dotfile_directory_path, "/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl")
 
 
 def create_symlink_to_dotfile_dictionary():
