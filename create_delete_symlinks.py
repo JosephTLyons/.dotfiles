@@ -35,7 +35,7 @@ class SymlinkBase:
         self.symlink_to_dotfile_dictionary[pathlib.Path(
             self.home_directory_path, ".profile")] = pathlib.Path(self.dotfile_directory_path, ".zprofile")
         self.symlink_to_dotfile_dictionary[pathlib.Path(
-            "/usr/local/bin/subl")] = pathlib.Path(self.dotfile_directory_path, "/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl")
+            "/usr/local/bin/subl")] = pathlib.Path("/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl")
 
 
 class CreateSymlinks(SymlinkBase):
