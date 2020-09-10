@@ -5,85 +5,82 @@ import os
 import pathlib
 
 
-def create_symlink(path_to_file, path_to_symlink):
-    try:
-        os.symlink(path_to_file, path_to_symlink)
-        action = "Created"
-    except FileExistsError:
-        action = "Already Exists"
+class SymlinkBase:
+    def __init__(self):
+        self.symlink_to_dotfile_dictionary = {}
+        self.home_directory_path = pathlib.Path.home()
+        self.dotfile_directory_path = pathlib.Path(os.getcwd() + "/files")
 
-    print("Symlink", action + ":", path_to_symlink, "->", path_to_file)
+        self.add_default_items_to_symlink_to_dotfile_dictionary()
+        self.add_custom_items_to_symlink_to_dotfile_dictionary()
 
+    def run(self):
+        raise NotImplementedError
 
-def delete_symlink(absolute_path_to_symlink):
-    try:
-        os.remove(absolute_path_to_symlink)
-        action = "Deleted"
-    except FileNotFoundError:
-        action = "Does Not Exist"
+    def add_default_items_to_symlink_to_dotfile_dictionary(self):
+        excluded_items = [".DS_Store"]
+        excluded_items += glob.glob(".*~")
 
-    print("Symlink", action + ":", absolute_path_to_symlink)
+        for file in os.listdir(self.dotfile_directory_path):
+            if os.path.isfile(os.path.join(self.dotfile_directory_path, file)) and file not in excluded_items:
+                absolute_path_to_symlink = pathlib.Path(
+                    self.home_directory_path, file)
+                absolute_path_to_dotfile = pathlib.Path(
+                    self.dotfile_directory_path, file)
+                self.symlink_to_dotfile_dictionary[absolute_path_to_symlink] = absolute_path_to_dotfile
 
-
-def add_default_items_to_symlink_to_dotfile_dictionary(
-    symlink_to_dotfile_dictionary,
-    home_directory_path,
-    dotfile_directory_path
-):
-    excluded_items = [".DS_Store"]
-    excluded_items += glob.glob(".*~")
-
-    for file in os.listdir(dotfile_directory_path):
-        if os.path.isfile(os.path.join(dotfile_directory_path, file)) and file not in excluded_items:
-            absolute_path_to_symlink = pathlib.Path(home_directory_path, file)
-            absolute_path_to_dotfile = pathlib.Path(
-                dotfile_directory_path, file)
-            symlink_to_dotfile_dictionary[absolute_path_to_symlink] = absolute_path_to_dotfile
+    def add_custom_items_to_symlink_to_dotfile_dictionary(self):
+        self.symlink_to_dotfile_dictionary[pathlib.Path(
+            self.home_directory_path, ".bashrc")] = pathlib.Path(self.dotfile_directory_path, ".zshrc")
+        self.symlink_to_dotfile_dictionary[pathlib.Path(
+            self.home_directory_path, ".profile")] = pathlib.Path(self.dotfile_directory_path, ".zprofile")
+        self.symlink_to_dotfile_dictionary[pathlib.Path(
+            "/usr/local/bin/subl")] = pathlib.Path(self.dotfile_directory_path, "/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl")
 
 
-def add_custom_items_to_symlink_to_dotfile_dictionary(
-    symlink_to_dotfile_dictionary,
-    home_directory_path,
-    dotfile_directory_path
-):
-    symlink_to_dotfile_dictionary[pathlib.Path(
-        home_directory_path, ".bashrc")] = pathlib.Path(dotfile_directory_path, ".zshrc")
-    symlink_to_dotfile_dictionary[pathlib.Path(
-        home_directory_path, ".profile")] = pathlib.Path(dotfile_directory_path, ".zprofile")
-    symlink_to_dotfile_dictionary[pathlib.Path(
-        "/usr/local/bin/subl")] = pathlib.Path(dotfile_directory_path, "/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl")
+class CreateSymlinks(SymlinkBase):
+    def __init__(self):
+        super().__init__()
+
+    def run(self):
+        self.create_symlinks()
+
+    def create_symlinks(self):
+        for i, (absolute_path_to_symlink, absolute_path_to_dotfile) in enumerate(self.symlink_to_dotfile_dictionary.items()):
+            print(f"{i + 1}) ", end="")
+            self.create_symlink(absolute_path_to_dotfile,
+                                absolute_path_to_symlink)
+
+    def create_symlink(self, path_to_file, path_to_symlink):
+        try:
+            os.symlink(path_to_file, path_to_symlink)
+            action = "Created"
+        except FileExistsError:
+            action = "Already Exists"
+
+        print("Symlink", action + ":", path_to_symlink, "->", path_to_file)
 
 
-def create_symlink_to_dotfile_dictionary():
-    home_directory_path = pathlib.Path.home()
-    dotfile_directory_path = pathlib.Path(os.getcwd() + "/files")
+class DeleteSymlinks(SymlinkBase):
+    def __init__(self):
+        super().__init__()
 
-    symlink_to_dotfile_dictionary = {}
+    def run(self):
+        self.delete_symlinks()
 
-    add_default_items_to_symlink_to_dotfile_dictionary(
-        symlink_to_dotfile_dictionary,
-        home_directory_path,
-        dotfile_directory_path
-    )
-    add_custom_items_to_symlink_to_dotfile_dictionary(
-        symlink_to_dotfile_dictionary,
-        home_directory_path,
-        dotfile_directory_path
-    )
+    def delete_symlinks(self):
+        for i, absolute_path_to_symlink in enumerate(self.symlink_to_dotfile_dictionary.keys()):
+            print(f"{i + 1}) ", end="")
+            self.delete_symlink(absolute_path_to_symlink)
 
-    return symlink_to_dotfile_dictionary
+    def delete_symlink(self, absolute_path_to_symlink):
+        try:
+            os.remove(absolute_path_to_symlink)
+            action = "Deleted"
+        except FileNotFoundError:
+            action = "Does Not Exist"
 
-
-def create_symlinks():
-    for i, (absolute_path_to_symlink, absolute_path_to_dotfile) in enumerate(create_symlink_to_dotfile_dictionary().items()):
-        print(f"{i + 1}) ", end="")
-        create_symlink(absolute_path_to_dotfile, absolute_path_to_symlink)
-
-
-def delete_symlinks():
-    for i, absolute_path_to_symlink in enumerate(create_symlink_to_dotfile_dictionary().keys()):
-        print(f"{i + 1}) ", end="")
-        delete_symlink(absolute_path_to_symlink)
+        print("Symlink", action + ":", absolute_path_to_symlink)
 
 
 if __name__ == "__main__":
@@ -98,8 +95,10 @@ if __name__ == "__main__":
     print()
 
     if user_input == 1:
-        create_symlinks()
+        create_symlinks = CreateSymlinks()
+        create_symlinks.run()
     elif user_input == 2:
-        delete_symlinks()
+        delete_symlinks = DeleteSymlinks()
+        delete_symlinks.run()
     else:
         print("Invalid Input")
