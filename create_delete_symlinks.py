@@ -58,7 +58,7 @@ class CreateSymlinks(SymlinkBase):
         except FileExistsError:
             action = "Already Exists"
 
-        print("Symlink", action + ":", path_to_symlink, "->", path_to_file)
+        print(f"Symlink {action}: {path_to_symlink} -> {path_to_file}")
 
 
 class DeleteSymlinks(SymlinkBase):
@@ -80,7 +80,7 @@ class DeleteSymlinks(SymlinkBase):
         except FileNotFoundError:
             action = "Does Not Exist"
 
-        print("Symlink", action + ":", absolute_path_to_symlink)
+        print(f"Symlink {action}: {absolute_path_to_symlink}")
 
 
 if __name__ == "__main__":
