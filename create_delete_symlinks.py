@@ -12,13 +12,14 @@ class SymlinkBase:
         self.home_directory_path = pathlib.Path.home()
         self.dotfile_directory_path = pathlib.Path(os.getcwd() + "/files")
         self.add_all_items_to_symlink_to_dotfile_dictionary(
-            self.dotfile_directory_path, self.home_directory_path, "files"
+            "Dotfiles", self.dotfile_directory_path, self.home_directory_path, "files"
         )
 
         self.atom_package_development_directory_path = self.home_directory_path / "github"
         self.atom_package_symlink_directory_path = self.home_directory_path / ".atom/packages"
 
         self.add_all_items_to_symlink_to_dotfile_dictionary(
+            "Atom Packages",
             self.atom_package_development_directory_path,
             self.atom_package_symlink_directory_path,
             "dirs",
@@ -30,10 +31,16 @@ class SymlinkBase:
         raise NotImplementedError
 
     def add_all_items_to_symlink_to_dotfile_dictionary(
-        self, items_directory_path, desired_symlinks_directory_path, item_types_to_include
+        self,
+        new_dictionary_name,
+        items_directory_path,
+        desired_symlinks_directory_path,
+        item_types_to_include,
     ):
         excluded_items = [".DS_Store"]
         excluded_items += glob.glob(".*~")
+
+        inner_symlink_to_dotfile_dictionary = {}
 
         for file in os.listdir(items_directory_path):
             path_to_item = os.path.join(items_directory_path, file)
@@ -48,20 +55,24 @@ class SymlinkBase:
             if is_correct_item_type and file not in excluded_items:
                 absolute_path_to_symlink = desired_symlinks_directory_path / file
                 absolute_path_to_dotfile = items_directory_path / file
-                self.symlink_to_dotfile_dictionary[
+                inner_symlink_to_dotfile_dictionary[
                     absolute_path_to_symlink
                 ] = absolute_path_to_dotfile
 
+        self.symlink_to_dotfile_dictionary[
+            new_dictionary_name
+        ] = inner_symlink_to_dotfile_dictionary
+
     def add_custom_items_to_symlink_to_dotfile_dictionary(self):
-        self.symlink_to_dotfile_dictionary[self.home_directory_path / ".bashrc"] = (
-            self.dotfile_directory_path / ".zshrc"
-        )
-        self.symlink_to_dotfile_dictionary[self.home_directory_path / ".profile"] = (
-            self.dotfile_directory_path / ".zprofile"
-        )
-        self.symlink_to_dotfile_dictionary[pathlib.Path("/usr/local/bin/subl")] = pathlib.Path(
-            "/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl"
-        )
+        inner_symlink_to_dotfile_dictionary = {
+            self.home_directory_path / ".bashrc": self.dotfile_directory_path / ".zshrc",
+            self.home_directory_path / ".profile": self.dotfile_directory_path / ".zprofile",
+            pathlib.Path(
+                "/usr/local/bin/subl"
+            ): "/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl",
+        }
+
+        self.symlink_to_dotfile_dictionary["Custom Items"] = inner_symlink_to_dotfile_dictionary
 
 
 class CreateSymlinks(SymlinkBase):
@@ -72,11 +83,12 @@ class CreateSymlinks(SymlinkBase):
         self.create_symlinks()
 
     def create_symlinks(self):
-        for i, (absolute_path_to_symlink, absolute_path_to_dotfile) in enumerate(
-            self.symlink_to_dotfile_dictionary.items()
-        ):
-            print(f"{i + 1}) ", end="")
-            self.create_symlink(absolute_path_to_dotfile, absolute_path_to_symlink)
+        for dict_name, dict in self.symlink_to_dotfile_dictionary.items():
+            print(dict_name)
+
+            for i, (absolute_path_to_symlink, absolute_path_to_dotfile) in enumerate(dict.items()):
+                print(f"{i + 1}) ", end="")
+                self.create_symlink(absolute_path_to_dotfile, absolute_path_to_symlink)
 
     def create_symlink(self, path_to_file, path_to_symlink):
         try:
@@ -96,9 +108,12 @@ class DeleteSymlinks(SymlinkBase):
         self.delete_symlinks()
 
     def delete_symlinks(self):
-        for i, absolute_path_to_symlink in enumerate(self.symlink_to_dotfile_dictionary.keys()):
-            print(f"{i + 1}) ", end="")
-            self.delete_symlink(absolute_path_to_symlink)
+        for dict_name, dict in self.symlink_to_dotfile_dictionary.items():
+            print(dict_name)
+
+            for i, absolute_path_to_symlink in enumerate(dict.keys()):
+                print(f"{i + 1}) ", end="")
+                self.delete_symlink(absolute_path_to_symlink)
 
     def delete_symlink(self, absolute_path_to_symlink):
         try:
