@@ -8,34 +8,60 @@ import pathlib
 class SymlinkBase:
     def __init__(self):
         self.symlink_to_dotfile_dictionary = {}
+
         self.home_directory_path = pathlib.Path.home()
         self.dotfile_directory_path = pathlib.Path(os.getcwd() + "/files")
+        self.add_all_items_to_symlink_to_dotfile_dictionary(
+            self.dotfile_directory_path, self.home_directory_path, "files"
+        )
 
-        self.add_default_items_to_symlink_to_dotfile_dictionary()
+        self.atom_package_development_directory_path = self.home_directory_path / "github"
+        self.atom_package_symlink_directory_path = self.home_directory_path / ".atom/packages"
+
+        self.add_all_items_to_symlink_to_dotfile_dictionary(
+            self.atom_package_development_directory_path,
+            self.atom_package_symlink_directory_path,
+            "dirs",
+        )
+
         self.add_custom_items_to_symlink_to_dotfile_dictionary()
 
     def run(self):
         raise NotImplementedError
 
-    def add_default_items_to_symlink_to_dotfile_dictionary(self):
+    def add_all_items_to_symlink_to_dotfile_dictionary(
+        self, items_directory_path, desired_symlinks_directory_path, item_types_to_include
+    ):
         excluded_items = [".DS_Store"]
         excluded_items += glob.glob(".*~")
 
-        for file in os.listdir(self.dotfile_directory_path):
-            if os.path.isfile(os.path.join(self.dotfile_directory_path, file)) and file not in excluded_items:
-                absolute_path_to_symlink = pathlib.Path(
-                    self.home_directory_path, file)
-                absolute_path_to_dotfile = pathlib.Path(
-                    self.dotfile_directory_path, file)
-                self.symlink_to_dotfile_dictionary[absolute_path_to_symlink] = absolute_path_to_dotfile
+        for file in os.listdir(items_directory_path):
+            path_to_item = os.path.join(items_directory_path, file)
+
+            if item_types_to_include == "files":
+                is_correct_item_type = os.path.isfile(path_to_item)
+            elif item_types_to_include == "dirs":
+                is_correct_item_type = os.path.isdir(path_to_item)
+            else:
+                is_correct_item_type = True
+
+            if is_correct_item_type and file not in excluded_items:
+                absolute_path_to_symlink = pathlib.Path(desired_symlinks_directory_path, file)
+                absolute_path_to_dotfile = pathlib.Path(items_directory_path, file)
+                self.symlink_to_dotfile_dictionary[
+                    absolute_path_to_symlink
+                ] = absolute_path_to_dotfile
 
     def add_custom_items_to_symlink_to_dotfile_dictionary(self):
-        self.symlink_to_dotfile_dictionary[pathlib.Path(
-            self.home_directory_path, ".bashrc")] = pathlib.Path(self.dotfile_directory_path, ".zshrc")
-        self.symlink_to_dotfile_dictionary[pathlib.Path(
-            self.home_directory_path, ".profile")] = pathlib.Path(self.dotfile_directory_path, ".zprofile")
-        self.symlink_to_dotfile_dictionary[pathlib.Path(
-            "/usr/local/bin/subl")] = pathlib.Path("/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl")
+        self.symlink_to_dotfile_dictionary[
+            pathlib.Path(self.home_directory_path, ".bashrc")
+        ] = pathlib.Path(self.dotfile_directory_path, ".zshrc")
+        self.symlink_to_dotfile_dictionary[
+            pathlib.Path(self.home_directory_path, ".profile")
+        ] = pathlib.Path(self.dotfile_directory_path, ".zprofile")
+        self.symlink_to_dotfile_dictionary[pathlib.Path("/usr/local/bin/subl")] = pathlib.Path(
+            "/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl"
+        )
 
 
 class CreateSymlinks(SymlinkBase):
@@ -46,10 +72,11 @@ class CreateSymlinks(SymlinkBase):
         self.create_symlinks()
 
     def create_symlinks(self):
-        for i, (absolute_path_to_symlink, absolute_path_to_dotfile) in enumerate(self.symlink_to_dotfile_dictionary.items()):
+        for i, (absolute_path_to_symlink, absolute_path_to_dotfile) in enumerate(
+            self.symlink_to_dotfile_dictionary.items()
+        ):
             print(f"{i + 1}) ", end="")
-            self.create_symlink(absolute_path_to_dotfile,
-                                absolute_path_to_symlink)
+            self.create_symlink(absolute_path_to_dotfile, absolute_path_to_symlink)
 
     def create_symlink(self, path_to_file, path_to_symlink):
         try:
