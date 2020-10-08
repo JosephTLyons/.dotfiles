@@ -60,7 +60,7 @@ class SymlinkBase:
                 ] = absolute_path_to_dotfile
 
         self.symlink_to_dotfile_dictionary[
-            new_dictionary_name
+            new_dictionary_name + " (Automatic)"
         ] = inner_symlink_to_dotfile_dictionary
 
     def add_custom_items_to_symlink_to_dotfile_dictionary(self):
