@@ -46,19 +46,19 @@ class SymlinkBase:
                 is_correct_item_type = True
 
             if is_correct_item_type and file not in excluded_items:
-                absolute_path_to_symlink = pathlib.Path(desired_symlinks_directory_path, file)
-                absolute_path_to_dotfile = pathlib.Path(items_directory_path, file)
+                absolute_path_to_symlink = desired_symlinks_directory_path / file
+                absolute_path_to_dotfile = items_directory_path / file
                 self.symlink_to_dotfile_dictionary[
                     absolute_path_to_symlink
                 ] = absolute_path_to_dotfile
 
     def add_custom_items_to_symlink_to_dotfile_dictionary(self):
-        self.symlink_to_dotfile_dictionary[
-            pathlib.Path(self.home_directory_path, ".bashrc")
-        ] = pathlib.Path(self.dotfile_directory_path, ".zshrc")
-        self.symlink_to_dotfile_dictionary[
-            pathlib.Path(self.home_directory_path, ".profile")
-        ] = pathlib.Path(self.dotfile_directory_path, ".zprofile")
+        self.symlink_to_dotfile_dictionary[self.home_directory_path / ".bashrc"] = (
+            self.dotfile_directory_path / ".zshrc"
+        )
+        self.symlink_to_dotfile_dictionary[self.home_directory_path / ".profile"] = (
+            self.dotfile_directory_path / ".zprofile"
+        )
         self.symlink_to_dotfile_dictionary[pathlib.Path("/usr/local/bin/subl")] = pathlib.Path(
             "/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl"
         )
