@@ -86,7 +86,9 @@ class CreateSymlinks(SymlinkBase):
         for dict_name, dictionary in self.symlink_to_dotfile_dictionary.items():
             print(dict_name)
 
-            for i, (absolute_path_to_symlink, absolute_path_to_dotfile) in enumerate(dictionary.items()):
+            for i, (absolute_path_to_symlink, absolute_path_to_dotfile) in enumerate(
+                dictionary.items()
+            ):
                 print(f"{i + 1}) ", end="")
                 CreateSymlinks.create_symlink(absolute_path_to_dotfile, absolute_path_to_symlink)
 
