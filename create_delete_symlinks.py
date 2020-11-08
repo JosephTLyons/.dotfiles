@@ -83,8 +83,8 @@ class CreateSymlinks(SymlinkBase):
         self.create_symlinks()
 
     def create_symlinks(self):
-        for dict_name, dictionary in self.symlink_to_dotfile_dictionary.items():
-            print(dict_name)
+        for dictionary_name, dictionary in self.symlink_to_dotfile_dictionary.items():
+            print(dictionary_name)
 
             for i, (absolute_path_to_symlink, absolute_path_to_dotfile) in enumerate(
                 dictionary.items()
@@ -111,8 +111,8 @@ class DeleteSymlinks(SymlinkBase):
         self.delete_symlinks()
 
     def delete_symlinks(self):
-        for dict_name, dictionary in self.symlink_to_dotfile_dictionary.items():
-            print(dict_name)
+        for dictionary_name, dictionary in self.symlink_to_dotfile_dictionary.items():
+            print(dictionary_name)
 
             for i, absolute_path_to_symlink in enumerate(dictionary.keys()):
                 print(f"{i + 1}) ", end="")
