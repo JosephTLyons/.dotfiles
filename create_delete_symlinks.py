@@ -88,9 +88,10 @@ class CreateSymlinks(SymlinkBase):
 
             for i, (absolute_path_to_symlink, absolute_path_to_dotfile) in enumerate(dict.items()):
                 print(f"{i + 1}) ", end="")
-                self.create_symlink(absolute_path_to_dotfile, absolute_path_to_symlink)
+                CreateSymlinks.create_symlink(absolute_path_to_dotfile, absolute_path_to_symlink)
 
-    def create_symlink(self, path_to_file, path_to_symlink):
+    @staticmethod
+    def create_symlink(path_to_file, path_to_symlink):
         try:
             os.symlink(path_to_file, path_to_symlink)
             action = "Created"
@@ -113,9 +114,10 @@ class DeleteSymlinks(SymlinkBase):
 
             for i, absolute_path_to_symlink in enumerate(dict.keys()):
                 print(f"{i + 1}) ", end="")
-                self.delete_symlink(absolute_path_to_symlink)
+                DeleteSymlinks.delete_symlink(absolute_path_to_symlink)
 
-    def delete_symlink(self, absolute_path_to_symlink):
+    @staticmethod
+    def delete_symlink(absolute_path_to_symlink):
         try:
             os.remove(absolute_path_to_symlink)
             action = "Deleted"
