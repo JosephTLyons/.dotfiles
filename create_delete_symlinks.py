@@ -86,11 +86,16 @@ class CreateSymlinks(SymlinkBase):
         for dictionary_name, dictionary in self.symlink_to_dotfile_dictionary.items():
             print(dictionary_name)
 
-            for i, (absolute_path_to_symlink, absolute_path_to_dotfile) in enumerate(
-                dictionary.items()
-            ):
-                print(f"{i + 1}) ", end="")
-                CreateSymlinks.create_symlink(absolute_path_to_dotfile, absolute_path_to_symlink)
+            if dictionary:
+                for i, (absolute_path_to_symlink, absolute_path_to_dotfile) in enumerate(
+                    dictionary.items()
+                ):
+                    print(f"{i + 1}) ", end="")
+                    CreateSymlinks.create_symlink(
+                        absolute_path_to_dotfile, absolute_path_to_symlink
+                    )
+            else:
+                print("- No items in dictionary")
 
     @staticmethod
     def create_symlink(path_to_file, path_to_symlink):
@@ -114,9 +119,12 @@ class DeleteSymlinks(SymlinkBase):
         for dictionary_name, dictionary in self.symlink_to_dotfile_dictionary.items():
             print(dictionary_name)
 
-            for i, absolute_path_to_symlink in enumerate(dictionary.keys()):
-                print(f"{i + 1}) ", end="")
-                DeleteSymlinks.delete_symlink(absolute_path_to_symlink)
+            if dictionary:
+                for i, absolute_path_to_symlink in enumerate(dictionary.keys()):
+                    print(f"{i + 1}) ", end="")
+                    DeleteSymlinks.delete_symlink(absolute_path_to_symlink)
+            else:
+                print("- No items in dictionary")
 
     @staticmethod
     def delete_symlink(absolute_path_to_symlink):
