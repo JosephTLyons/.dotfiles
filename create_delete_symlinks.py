@@ -48,26 +48,29 @@ class SymlinkBase:
 
         inner_symlink_to_dotfile_dictionary = {}
 
-        for file in os.listdir(items_directory_path):
-            path_to_item = os.path.join(items_directory_path, file)
+        if items_directory_path.exists():
+            for file in os.listdir(items_directory_path):
+                path_to_item = os.path.join(items_directory_path, file)
 
-            if item_types_to_include == "files":
-                is_correct_item_type = os.path.isfile(path_to_item)
-            elif item_types_to_include == "dirs":
-                is_correct_item_type = os.path.isdir(path_to_item)
-            else:
-                is_correct_item_type = True
+                if item_types_to_include == "files":
+                    is_correct_item_type = os.path.isfile(path_to_item)
+                elif item_types_to_include == "dirs":
+                    is_correct_item_type = os.path.isdir(path_to_item)
+                else:
+                    is_correct_item_type = True
 
-            if is_correct_item_type and file not in excluded_items:
-                absolute_path_to_symlink = desired_symlinks_directory_path / file
-                absolute_path_to_dotfile = items_directory_path / file
-                inner_symlink_to_dotfile_dictionary[
-                    absolute_path_to_symlink
-                ] = absolute_path_to_dotfile
+                if is_correct_item_type and file not in excluded_items:
+                    absolute_path_to_symlink = desired_symlinks_directory_path / file
+                    absolute_path_to_dotfile = items_directory_path / file
+                    inner_symlink_to_dotfile_dictionary[
+                        absolute_path_to_symlink
+                    ] = absolute_path_to_dotfile
 
-        self.symlink_to_dotfile_dictionary[
-            new_dictionary_name + " (Automatic)"
-        ] = inner_symlink_to_dotfile_dictionary
+            self.symlink_to_dotfile_dictionary[
+                new_dictionary_name + " (Automatic)"
+            ] = inner_symlink_to_dotfile_dictionary
+        else:
+            print(f"{items_directory_path} does not exist")
 
     def add_custom_items_to_symlink_to_dotfile_dictionary(self):
         inner_symlink_to_dotfile_dictionary = {
