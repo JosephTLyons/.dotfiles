@@ -11,14 +11,14 @@ class SymlinkBase:
 
         self.home_directory_path = pathlib.Path.home()
         self.dotfile_directory_path = pathlib.Path(os.getcwd() + "/files")
-        self.add_all_items_to_symlink_to_dotfile_dictionary(
+        self.add_all_items_in_directory_to_symlink_to_dotfile_dictionary(
             "Dotfiles", self.dotfile_directory_path, self.home_directory_path, "files"
         )
 
         self.atom_package_development_directory_path = self.home_directory_path / "github"
         self.atom_package_symlink_directory_path = self.home_directory_path / ".atom/packages"
 
-        self.add_all_items_to_symlink_to_dotfile_dictionary(
+        self.add_all_items_in_directory_to_symlink_to_dotfile_dictionary(
             "Atom Packages",
             self.atom_package_development_directory_path,
             self.atom_package_symlink_directory_path,
@@ -36,7 +36,7 @@ class SymlinkBase:
             else:
                 print("- No items in dictionary")
 
-    def add_all_items_to_symlink_to_dotfile_dictionary(
+    def add_all_items_in_directory_to_symlink_to_dotfile_dictionary(
         self,
         new_dictionary_name,
         items_directory_path,
