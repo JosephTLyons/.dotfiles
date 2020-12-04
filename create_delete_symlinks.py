@@ -10,9 +10,10 @@ class SymlinkBase:
         self.symlink_to_dotfile_dictionary = {}
 
         self.home_directory_path = pathlib.Path.home()
-        self.dotfile_directory_path = pathlib.Path(os.getcwd() + "/files")
+        self.home_directory_files_path = pathlib.Path(os.getcwd() + "/home_directory_files")
+        self.custom_location_files = pathlib.Path(os.getcwd() + "/custom_location_files")
         self.add_all_items_in_directory_to_symlink_to_dotfile_dictionary(
-            "Dotfiles", self.dotfile_directory_path, self.home_directory_path, "files"
+            "Dotfiles", self.home_directory_files_path, self.home_directory_path, "files"
         )
 
         self.atom_package_development_directory_path = self.home_directory_path / "github"
@@ -74,9 +75,9 @@ class SymlinkBase:
 
     def add_custom_items_to_symlink_to_dotfile_dictionary(self):
         inner_symlink_to_dotfile_dictionary = {
-            self.home_directory_path / ".bashrc": self.dotfile_directory_path / ".zshrc",
-            self.home_directory_path / ".profile": self.dotfile_directory_path / ".zprofile",
-            self.home_directory_path / ".config/starship.toml": self.dotfile_directory_path / "starship.toml",
+            self.home_directory_path / ".bashrc": self.home_directory_files_path / ".zshrc",
+            self.home_directory_path / ".profile": self.home_directory_files_path / ".zprofile",
+            self.home_directory_path / ".config/starship.toml": self.custom_location_files / "starship.toml",
             pathlib.Path(
                 "/usr/local/bin/subl"
             ): "/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl",
