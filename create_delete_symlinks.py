@@ -77,7 +77,9 @@ class SymlinkBase:
         inner_symlink_to_dotfile_dictionary = {
             self.home_directory_path / ".bashrc": self.home_directory_files_path / ".zshrc",
             self.home_directory_path / ".profile": self.home_directory_files_path / ".zprofile",
-            self.home_directory_path / ".config/starship.toml": self.custom_location_files / "starship.toml",
+            self.home_directory_path
+            / ".config/starship.toml": self.custom_location_files
+            / "starship.toml",
             pathlib.Path(
                 "/usr/local/bin/subl"
             ): "/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl",
