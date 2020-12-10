@@ -5,4 +5,5 @@ export PATH=/Users/josephlyons/.nimble/bin:$PATH
 # SYSCON RELATED ITEMS =============================================================================
 
 export CPATH=`xcrun --show-sdk-path`/usr/include
+export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES
 export PATH=$PATH:/Applications/Postgres.app/Contents/Versions/11/bin
