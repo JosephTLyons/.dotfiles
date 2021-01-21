@@ -83,6 +83,9 @@ class SymlinkBase:
             pathlib.Path(
                 "/usr/local/bin/subl"
             ): "/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl",
+            pathlib.Path(
+                "/usr/local/bin/monodraw"
+            ): "/Applications/Monodraw.app/Contents/Resources/monodraw",
         }
 
         self.symlink_to_dotfile_dictionary["Custom Items"] = inner_symlink_to_dotfile_dictionary
